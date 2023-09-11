@@ -3,9 +3,8 @@ import { useState } from "react";
 import {
   StyleSheet,
   Text,
+  FlatList,
   View,
-  Button,
-  TextInput,
   ImageBackground,
   Dimensions,
 } from "react-native";
@@ -14,6 +13,8 @@ import {
   Rubik_700Bold,
   Rubik_400Regular,
 } from "@expo-google-fonts/rubik";
+import GoalItem from "./components/GoalItem";
+import GoalInput from "./components/GoalInput";
 
 export default function App() {
   const [enteredGoalText, setEnteredGoalText] = useState("");
@@ -28,21 +29,17 @@ export default function App() {
     return null;
   }
 
-  // Function to handle changes in the goal input text
-  function goalInputHandler(enteredText) {
-    setEnteredGoalText(enteredText);
-  }
-
   // Function to handle adding a new goal
-  function addGoalHandler() {
+  function addGoalHandler(enteredGoalText) {
     /* 
       Bad Programming Practice
       setCourseGoals([...courseGoals, enteredGoalText]);
     */
     // Update the courseGoals array by adding the enteredGoalText
-    setCourseGoals((currentCourseGoals) => [...courseGoals, enteredGoalText]);
-    // Clear the text input by resetting its value
-    setEnteredGoalText("");
+    setCourseGoals((currentCourseGoals) => [
+      ...currentCourseGoals,
+      { text: enteredGoalText, key: Math.random().toString() },
+    ]);
   }
 
   return (
@@ -52,26 +49,13 @@ export default function App() {
     >
       <View style={styles.appContainer}>
         <Text style={styles.appTitle}>COURSE GOALS</Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.inputText}
-            placeholder="Your Course Goal"
-            onChangeText={goalInputHandler}
-            value={enteredGoalText}
-          />
-          <Button
-            title="Add Goal"
-            color="rgb(28, 96, 125)"
-            onPress={addGoalHandler}
-          />
-        </View>
-        <View style={styles.goalsContainer}>
+        <GoalInput onAddGoal={addGoalHandler} />
+        <View style={styles.goalListContainer}>
           <Text style={styles.goalsText}>List of Goals</Text>
-          {courseGoals.map((goal) => (
-            <Text key={goal} style={styles.enteredGoalsText}>
-              {goal}
-            </Text>
-          ))}
+          <FlatList
+            data={courseGoals}
+            renderItem={(itemData) => <GoalItem text={itemData.item.text} />}
+          />
         </View>
       </View>
       <StatusBar style="auto" />
@@ -105,55 +89,18 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").height,
   },
 
-  inputContainer: {
-    padding: 13,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingBottom: 20,
-    marginBottom: 20,
-    borderWidth: 2,
-    borderColor: "rgb(224,224,224)",
-  },
-
-  inputText: {
+  goalListContainer: {
     flex: 1,
-    borderWidth: 0,
-    borderColor: "rgba(200, 200, 225, 0.5)",
-    backgroundColor: "rgba(217, 232, 251, 0.5)",
-    color: "#000000",
-    width: "70%",
-    marginRight: 8,
-    padding: 13,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  goalsContainer: {
-    flex: 5,
     paddingTop: 15,
-    padding: 25,
     borderTopWidth: 2,
     borderColor: "rgb(224,224,224)",
   },
 
   goalsText: {
-    fontSize: 22,
+    fontSize: 24,
     paddingBottom: 5,
     fontFamily: "Rubik_400Regular",
     justifyContent: "center",
     alignItems: "baseline",
-  },
-
-  enteredGoalsText: {
-    padding: 15,
-    marginVertical: 5,
-    borderRadius: 10,
-    backgroundColor: "rgb(28, 96, 125)",
-    color: "#fefefe",
-    fontSize: 16,
-    fontFamily: "Rubik_400Regular",
-    height: "12%",
-    textAlignVertical: "center",
   },
 });
