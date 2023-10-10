@@ -12,7 +12,7 @@ export default GoalItem;
 
 const styles = StyleSheet.create({
   goalItems: {
-    padding: 15,
+    padding: 20,
     marginVertical: 5,
     borderRadius: 10,
     backgroundColor: "rgb(28, 96, 125)",

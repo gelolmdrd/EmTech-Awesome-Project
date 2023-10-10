@@ -2,32 +2,20 @@ import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import {
   StyleSheet,
-  Text,
+  ScrollView,
   FlatList,
   View,
   ImageBackground,
   Dimensions,
 } from "react-native";
-import {
-  useFonts,
-  Rubik_700Bold,
-  Rubik_400Regular,
-} from "@expo-google-fonts/rubik";
+
 import GoalItem from "./components/GoalItem";
 import GoalInput from "./components/GoalInput";
+import Header from "./components/Header";
+import GoalListHeader from "./components/GoalListHeader";
 
 export default function App() {
-  const [enteredGoalText, setEnteredGoalText] = useState("");
   const [courseGoals, setCourseGoals] = useState([]);
-
-  let [fontsLoaded, fontError] = useFonts({
-    Rubik_700Bold,
-    Rubik_400Regular,
-  });
-
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
 
   // Function to handle adding a new goal
   function addGoalHandler(enteredGoalText) {
@@ -42,17 +30,22 @@ export default function App() {
     ]);
   }
 
+  function clearAllGoals() {
+    setCourseGoals([]);
+  }
+
   return (
     <ImageBackground
       source={require("./assets/bg-image.jpg")}
       style={styles.appBackground}
     >
       <View style={styles.appContainer}>
-        <Text style={styles.appTitle}>COURSE GOALS</Text>
+        <Header />
         <GoalInput onAddGoal={addGoalHandler} />
+        <GoalListHeader onPress={clearAllGoals} />
         <View style={styles.goalListContainer}>
-          <Text style={styles.goalsText}>List of Goals</Text>
           <FlatList
+            style={styles.goalContainer}
             data={courseGoals}
             renderItem={(itemData) => <GoalItem text={itemData.item.text} />}
           />
@@ -75,12 +68,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
 
-  appTitle: {
-    fontFamily: "Rubik_700Bold",
-    fontSize: 40,
-    color: "rgb(28, 96, 125)",
-  },
-
   appBackground: {
     position: "absolute",
     left: 0,
@@ -90,17 +77,10 @@ const styles = StyleSheet.create({
   },
 
   goalListContainer: {
-    flex: 1,
-    paddingTop: 15,
-    borderTopWidth: 2,
-    borderColor: "rgb(224,224,224)",
+    maxHeight: "65%",
   },
 
-  goalsText: {
-    fontSize: 24,
-    paddingBottom: 5,
-    fontFamily: "Rubik_400Regular",
-    justifyContent: "center",
-    alignItems: "baseline",
+  goalContainer: {
+    paddingHorizontal: 25,
   },
 });
