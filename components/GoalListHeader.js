@@ -1,4 +1,4 @@
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import { useFonts, Rubik_400Regular } from "@expo-google-fonts/rubik";
 
 function GoalListHeader({ onPress }) {
@@ -13,7 +13,19 @@ function GoalListHeader({ onPress }) {
   return (
     <View style={styles.Container}>
       <Text style={styles.goalsText}>List of Goals</Text>
-      <Button title="Clear" onPress={onPress} color="rgb(28, 96, 125)" />
+      <Pressable
+        onPress={onPress}
+        style={({ pressed }) => [
+          {
+            backgroundColor: pressed
+              ? 'color="rgb(172, 217, 236)'
+              : 'color="rgb(28, 96, 125)',
+          },
+          styles.buttonStyle,
+        ]}
+      >
+        <Text style={styles.buttonText}>Clear</Text>
+      </Pressable>
     </View>
   );
 }
@@ -37,5 +49,20 @@ const styles = StyleSheet.create({
     fontFamily: "Rubik_400Regular",
     justifyContent: "center",
     alignItems: "baseline",
+  },
+
+  buttonStyle: {
+    borderRadius: 246,
+    padding: 6,
+    height: 40,
+    width: "20%",
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 5,
+  },
+
+  buttonText: {
+    fontSize: 16,
+    color: "white",
   },
 });
