@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { View, TextInput, Text, Pressable, StyleSheet } from "react-native";
+import {
+  View,
+  TextInput,
+  Text,
+  Pressable,
+  StyleSheet,
+  Modal,
+} from "react-native";
 
 function GoalInput(props) {
   const [enteredGoalText, setEnteredGoalText] = useState("");
@@ -36,10 +43,6 @@ function GoalInput(props) {
         ]}
       >
         <Text style={styles.buttonText}>Add Goal</Text>
-      </Pressable>
-
-      <Pressable disable="true">
-        <Text>Button Text</Text>
       </Pressable>
     </View>
   );
