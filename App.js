@@ -1,5 +1,5 @@
+import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
 import {
   StyleSheet,
   ScrollView,
@@ -7,31 +7,50 @@ import {
   View,
   ImageBackground,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 
 import GoalItem from "./components/GoalItem";
 import GoalInput from "./components/GoalInput";
 import Header from "./components/Header";
 import GoalListHeader from "./components/GoalListHeader";
+import GoalModal from "./components/GoalModal";
 
 export default function App() {
   const [courseGoals, setCourseGoals] = useState([]);
+  const [isModalVisible, setModalVisible] = useState(false);
 
-  // Function to handle adding a new goal
+  useEffect(() => {
+    if (courseGoals.length === 5) {
+      setModalVisible(true);
+    }
+  }, [courseGoals]);
+
   function addGoalHandler(enteredGoalText) {
-    /* 
-      Bad Programming Practice
-      setCourseGoals([...courseGoals, enteredGoalText]);
-    */
-    // Update the courseGoals array by adding the enteredGoalText
+    const goalId = Math.random().toString();
+
     setCourseGoals((currentCourseGoals) => [
       ...currentCourseGoals,
-      { text: enteredGoalText, key: Math.random().toString() },
+      { text: enteredGoalText, id: goalId },
     ]);
+
+    if (courseGoals.length === 4) {
+      setModalVisible(true);
+    }
+  }
+
+  function closeModal() {
+    setModalVisible(false);
   }
 
   function clearAllGoals() {
     setCourseGoals([]);
+  }
+
+  function deleteGoalHandler(goalId) {
+    setCourseGoals((currentCourseGoals) =>
+      currentCourseGoals.filter((goal) => goal.id !== goalId)
+    );
   }
 
   return (
@@ -47,11 +66,18 @@ export default function App() {
           <FlatList
             style={styles.goalContainer}
             data={courseGoals}
-            renderItem={(itemData) => <GoalItem text={itemData.item.text} />}
+            renderItem={(itemData) => (
+              <GoalItem
+                text={itemData.item.text}
+                id={itemData.item.id}
+                onDelete={deleteGoalHandler}
+              />
+            )}
           />
         </View>
+        <StatusBar style="auto" />
+        <GoalModal isVisible={isModalVisible} closeModal={closeModal} />
       </View>
-      <StatusBar style="auto" />
     </ImageBackground>
   );
 }
@@ -82,5 +108,17 @@ const styles = StyleSheet.create({
 
   goalContainer: {
     paddingHorizontal: 25,
+  },
+
+  addButton: {
+    backgroundColor: "rgb(28, 96, 125)",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
   },
 });

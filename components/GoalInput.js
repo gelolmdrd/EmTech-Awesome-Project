@@ -1,15 +1,33 @@
-import { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { View, TextInput, Text, Pressable, StyleSheet } from "react-native";
 
 function GoalInput(props) {
   const [enteredGoalText, setEnteredGoalText] = useState("");
+  const inputRef = useRef(null);
 
-  // Function to handle changes in the goal input text
+  useEffect(() => {
+    // Set focus on the text input when the modal is closed
+    if (!props.isVisible && isAppStarted.current) {
+      inputRef.current.focus();
+    }
+  }, [props.isVisible]);
+
+  const isAppStarted = useRef(false);
+
+  useEffect(() => {
+    // Set the app as started after initial render
+    isAppStarted.current = true;
+  }, []);
+
   function textInputHandler(enteredText) {
     setEnteredGoalText(enteredText);
   }
 
   function addGoalHandler() {
+    if (enteredGoalText.trim().length === 0) {
+      return; // Don't add empty goals
+    }
+
     props.onAddGoal(enteredGoalText);
 
     // Clear the text input by resetting its value
@@ -19,6 +37,7 @@ function GoalInput(props) {
   return (
     <View style={styles.inputContainer}>
       <TextInput
+        ref={inputRef}
         style={styles.inputText}
         placeholder="Your Course Goal"
         onChangeText={textInputHandler}
@@ -29,8 +48,8 @@ function GoalInput(props) {
         style={({ pressed }) => [
           {
             backgroundColor: pressed
-              ? 'color="rgb(172, 217, 236)'
-              : 'color="rgb(28, 96, 125)',
+              ? "rgb(172, 217, 236)"
+              : "rgb(28, 96, 125)",
           },
           styles.buttonStyle,
         ]}
@@ -40,8 +59,6 @@ function GoalInput(props) {
     </View>
   );
 }
-
-export default GoalInput;
 
 const styles = StyleSheet.create({
   inputContainer: {
@@ -83,3 +100,5 @@ const styles = StyleSheet.create({
     color: "white",
   },
 });
+
+export default GoalInput;
