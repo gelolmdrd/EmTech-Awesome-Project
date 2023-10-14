@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { View, TextInput, Text, Pressable, StyleSheet } from "react-native";
 
 function GoalInput(props) {
