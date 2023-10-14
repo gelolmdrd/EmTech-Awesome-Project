@@ -37,6 +37,10 @@ function GoalInput(props) {
       >
         <Text style={styles.buttonText}>Add Goal</Text>
       </Pressable>
+
+      <Pressable disable="true">
+        <Text>Button Text</Text>
+      </Pressable>
     </View>
   );
 }
