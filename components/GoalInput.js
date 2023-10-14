@@ -25,7 +25,7 @@ function GoalInput(props) {
 
   function addGoalHandler() {
     if (enteredGoalText.trim().length === 0) {
-      return; // Don't add empty goals
+      return;
     }
 
     props.onAddGoal(enteredGoalText);
